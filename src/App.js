@@ -38,6 +38,10 @@ class App extends React.Component {
           output.push(this.toString());
         }
 
+        function random() {
+          return txt[Math.floor(Math.random()*txt.length)]
+        }
+
         ` + code + `
 
         if (output) return output.join('\\r\\n\\r\\n');

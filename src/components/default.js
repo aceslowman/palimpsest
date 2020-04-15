@@ -24,10 +24,26 @@ export default `
 "superimpose will replace all non-whitespace characters of the first document with the second".superimpose("HELLO WORLD").out()
 
 /*
-    interleave(txt2, words = false)
+    interleave(txt2, amount = 1.0, words = false)
 */
 
-"interleave will output a string that alternates the characters (or words) between two texts".interleave("try changing the second argument to true").out()
+"interleave will output a string that alternates the characters (or words) between two texts. If a second argument is provided, it will alternate between the texts at the given percentage.".interleave("try changing the second argument to third").out()
+
+/*
+    reverse(words = false)
+*/
+"reverse will reverse the order of characters (or words) in a string".reverse().out()
+"reverse will reverse the order of characters (or words) in a string".reverse(true).out()
+
+/*
+    random()
+*/
+"the random command can be used to select a random text from what you've uploaded".out();
+
+// random()
+//     .reverse(true)
+//     .interleave(random(), 1, true)
+//     .out()
 
 //----FILE INPUT--------------------------
 

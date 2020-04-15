@@ -49,18 +49,35 @@ String.prototype.superimpose = function (txt2) {
 
 //--------------------------------------------------------------------
 /*
-    interleave will output a string that alternates the
-    characters (or words) between two texts
+    interleave will output a string that alternates
+    (either odd/even or by passing in amount as the
+    third argument)the characters (or words) between 
+    two texts
 */
-function interleave(txt1, txt2, words = false) {
+function interleave(txt1, txt2, amount = 1.0, words = false) {
     let arr1 = txt1.split(words ? ' ' : '');
     let arr2 = txt2.split(words ? ' ' : '');
 
     return arr1.map((elem, i) => {
-        return (i % 2 === 0) ? arr1[i] : arr2[i];     
+        return (i % 2 === 0) && (Math.random() < amount) ? arr1[i] : arr2[i];     
     }).join(words ? ' ' : '')
 }
 
-String.prototype.interleave = function (txt2, words = false) {
-    return interleave(this.toString(), txt2, words);
+String.prototype.interleave = function (txt2, amount = 1.0, words = false) {
+    return interleave(this.toString(), txt2, amount, words);
+}
+
+//--------------------------------------------------------------------
+/*
+    reverse will reverse the order of characters (or words)
+    in a string
+*/
+function reverse(txt, words = false) {
+    let arr = txt.split(words ? ' ' : '');    
+
+    return arr.reverse().join(words ? ' ' : '')
+}
+
+String.prototype.reverse = function (words = false) {
+    return reverse(this.toString(), words);
 }
