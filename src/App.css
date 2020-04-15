@@ -1,0 +1,81 @@
+html, body, #root {
+  width:100%;
+  height:100%;
+  font-family: 'monospace';
+}
+
+#APP {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: stretch;
+}
+
+#MAIN {
+  display: flex;
+  flex-flow: row;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+#CODE {  
+  /* background-color: black; */
+  width: 50%;
+  /* padding: 30px;  */  
+  box-sizing: border-box;
+} 
+
+#SELECTOR {
+  border-left: 1px solid black;
+  /* border-right: 1px solid black; */
+  background-color: black;
+  display: flex;
+  flex-flow: column;
+}
+
+#SELECTOR a {
+  padding: 5px;
+  font-family: monospace;
+  background-color: black;
+  color: white;
+  border: none;
+  border-bottom: 1px solid white;
+}
+
+#SELECTOR a:hover, 
+.invert {
+  background-color: white !important;
+  color: black !important;
+  border: none !important;
+  border-bottom: 1px solid black !important;
+}
+
+#OUTPUT {
+  width: 50%;
+  padding: 30px;
+  box-sizing: border-box;
+  font-size: 16px;
+  overflow-y: scroll;
+  background-color: black;
+  color: white;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+#EDITOR {
+  overflow-y: hidden;
+
+}
+
+#TOOLBAR {
+  width: 100%;
+  padding: 15px;
+  box-sizing: border-box;
+  border-bottom: 1px solid black;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
