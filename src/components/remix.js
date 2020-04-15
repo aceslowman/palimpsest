@@ -48,3 +48,19 @@ String.prototype.superimpose = function (txt2) {
 }
 
 //--------------------------------------------------------------------
+/*
+    interleave will output a string that alternates the
+    characters (or words) between two texts
+*/
+function interleave(txt1, txt2, words = false) {
+    let arr1 = txt1.split(words ? ' ' : '');
+    let arr2 = txt2.split(words ? ' ' : '');
+
+    return arr1.map((elem, i) => {
+        return (i % 2 === 0) ? arr1[i] : arr2[i];     
+    }).join(words ? ' ' : '')
+}
+
+String.prototype.interleave = function (txt2, words = false) {
+    return interleave(this.toString(), txt2, words);
+}

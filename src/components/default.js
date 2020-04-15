@@ -1,6 +1,8 @@
 export default `
 "palimpsest is a text manipulation toolkit".out()
 
+//----METHODS-----------------------------
+
 /*
     decimate(amount, substitute = '-')
 */
@@ -21,7 +23,13 @@ export default `
 
 "superimpose will replace all non-whitespace characters of the first document with the second".superimpose("HELLO WORLD").out()
 
-//---------------------------------------
+/*
+    interleave(txt2, words = false)
+*/
+
+"interleave will output a string that alternates the characters (or words) between two texts".interleave("try changing the second argument to true").out()
+
+//----FILE INPUT--------------------------
 
 "this tool can also handle multiple file uploads. by using the file chooser at the top of the page. each text file will be loaded into an array, accessible here as txt[index of file]. ".out()
 
@@ -32,16 +40,17 @@ export default `
 // or
 // txt[0].superimpose(txt[1])
 
-//---------------------------------------
+//----CHAINING----------------------------
 
 "any command can be chained togetherand will only be output if ended with out().".filterRepeat().decimate(0.8).out()
 
+//----OUTPUT------------------------------
 
 /*
     this was made in 2020
     please share your thoughts and bugs to
     
-    @aceslowman
+    @aceslowman (on twitter, ig)
     austin@aceslowman.com
     
     austin slominski
