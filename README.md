@@ -1,68 +1,200 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# PALIMPSEST is a text manipulation toolkit and live editor
 
-## Available Scripts
+-----------------------------------------
+## basic concepts
 
-In the project directory, you can run:
+any piece of text (referred to as a string) can have a number of methods applied to it.
 
-### `yarn start`
+every change you make to the text and each method applied to it will update on the opposite side of the screen.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+you can also execute the code by typing
+`(windows, linux) ctrl-enter`
+    or
+`(mac) cmd-enter`
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+```
+"PALIMPSEST is a text manipulation toolkit"
+    .scramble(true).out();
 
-### `yarn test`
+"it allows you to send text through a number of processes, which are defined at the bottom of this page".out();
+```
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+-----------------------------------------
+### chaining
 
-### `yarn build`
+any command can be chained together and will only be output if ended with out().
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+these chains can span multiple lines,making the document easier to read and experiment with.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+```
+"any method can be chained".out()
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+"any method can be chained"
+    .decimate(0.5)
+    .reverse(true)
+    .out()
+```
 
-### `yarn eject`
+-----------------------------------------
+### text buffers 
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+this tool can also handle text documents by selecting from numbers 0-9 in the middle toolbar.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+each text buffer exists in an array, accessible as 
+    `txt[index of file]`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+below, the first text buffer (numbers starting at zero) is reversed.
+    `txt[0].reverse()`
+    
+you can also upload multiple files using the chooser at the top of the page.
+(note: your existing buffers will be
+overwritten)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
+-----------------------------------------
+### selector
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+after loading your files you can view them individually by clicking on the numbers that appear in the middle of the page.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+the text can be retrieved using this number
 
-### Code Splitting
+```
+"you can upload multiple text files using the button at the top of the page (and shift-click-ing on each)".out()
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+"then you can view them individually using the selector in the middle".out()
 
-### Analyzing the Bundle Size
+"and use them in your code by accessing the txt array. the first file would be accessed as txt[0], as arrays begin at zero.".out()
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+-----------------------------------------
+## METHODS
 
-### Making a Progressive Web App
+* text manipulation
+    * [decimate (amount, substitute = '-')](#decimate)
+    * [filterRepeat (invert = false)](#filterRepeat)
+    * [superimpose (txt2, delineate = ' ')](#superimpose)
+    * [interleave (txt2, amount = 1.0, words = false)](#interleave)
+    * [reverse (words = true)](#reverse)
+    * [scramble (words = true)](#scramble)
+* other
+    * [random (arr = txt)](#random)
+    * [out ()](#out)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+-----------------------------------------
+### decimate
+##### *decimate (amount, substitute = '-')*
 
-### Advanced Configuration
+you can decimate a string, replacing a percentage of the text with the  substitution.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+by default it decimates individual characters, but soon it will allow for decimating words instead.
 
-### Deployment
+```
+"let your text decay".decimate(0.2, '-').out()
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+-----------------------------------------
+### filterRepeat
+##### *filterRepeat (invert = false)*
 
-### `yarn build` fails to minify
+you can filter out all repeat occurrences of words.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+this function can also be inverted so that only the repeats will be displayed.
+
+```
+"only the first occurrence of the word will appear".filterRepeat().out()
+
+"when inverted, only the repeated words will appear".filterRepeat(true).out()
+```
+
+-----------------------------------------
+### superimpose
+##### *superimpose (txt2, delineate = ' ')*
+
+superimpose will replace all non-whitespace characters of the first document with the second.
+
+```
+"lay two texts on top of each other".superimpose("THE TEXT ON TOP").out()
+```
+
+-----------------------------------------
+### interleave
+##### *interleave (txt2, amount = 1.0, words = false)*
+
+interleave will output a string that alternates the characters(or words) between two texts. If a second argument is provided, it will alternate between the texts at the given percentage.
+
+```
+"you can perform text weaving"
+    .interleave("to get interesting combinations of material", 1.0, true)
+    .out()
+```
+
+-----------------------------------------
+### reverse
+##### *reverse (words = true)*
+
+reverse will reverse the order of the words in a string.
+
+by passing false as an argument, it will reverse individual characters instead.
+
+```
+"you can read forward or backwards".reverse().out()
+"you can read forward or backwards".reverse(true).out()
+```
+
+-----------------------------------------
+### scramble
+##### *scramble (words = true)*
+
+scramble will mix up all of the words or individual characters of a string.
+
+```
+"some text is better scrambled".reverse().out()
+"some text is better scrambled".reverse(true).out()
+```
+
+-----------------------------------------
+### random
+##### *random (arr = txt)*
+
+the random command can be used to select a random element from an array.
+
+this means you can select texts at random
+    random(txt).decimate(0.2)
+
+or use it to generate a random number
+    txt[0].decimate(random([0.0,0.5]))
+
+if no arguments are passed, it will get the txt array by default.
+
+```
+random(
+    [
+        "anything can be passed as an array",
+        "it can work on text and on numbers".decimate(random([0.1,0.8]))
+    ]
+).out();
+
+/* for example
+random(txt)
+    .reverse(true)
+    .interleave(random(txt), , true)
+    .out()
+*/
+```
+
+#### palimpsest was made in 2020
+
+by austin słominski
+@aceslowman (on twitter, ig)
+austin@aceslowman.com
+
+#### this project was inspired by live coding tools like:
+
+hydra ([@_ojack_](https://twitter.com/_ojack_))
+    https://github.com/ojack/hydra
+
+orca ([@hundredrabbits](https://twitter.com/hundredrabbits))
+    https://github.com/hundredrabbits/Orca
+
+TidalCycles ([@tidalcycles](https://twitter.com/tidalcycles))
+    https://tidalcycles.org
