@@ -22,6 +22,7 @@ html, body, #root {
 #CODE {  
   width: 50%;
   box-sizing: border-box;
+      flex-grow: 1;
 } 
 
 #CENTER {
@@ -53,6 +54,8 @@ html, body, #root {
 #TOOLS a {
   border-top: 1px solid white;
   /* padding-bottom: 10px; */
+  /* font-size:1.2em; */
+  color:white;
 }
 
 #TOOLS {
@@ -65,13 +68,13 @@ html, body, #root {
 .invert {
   background-color: white !important;
   color: black !important;
-  border: none !important;
-  border-bottom: 1px solid black !important;
+  /* border: none !important; */
+  border-color: black !important;
 }
 
 #TOOLS a:hover {
-  border: none !important;
-  border-top: 1px solid black !important;
+  /* border: none !important; */
+  border-color: black !important;
 }
 
 #OUTPUT {
@@ -85,11 +88,12 @@ html, body, #root {
   color: white;
   white-space: pre-wrap;
   word-break: break-all;
+  flex-grow: 1;
+  font-family: monospace;
 }
 
 #EDITOR {
   overflow-y: hidden;
-
 }
 
 #TOOLBAR {
@@ -103,3 +107,39 @@ html, body, #root {
   justify-content: space-around;
 }
 
+@media only screen and (max-width: 600px){
+
+  #MAIN {
+    flex-flow: column;
+    width: 100%;
+  }
+
+  #CODE, #OUTPUT {
+    width: 100%;
+    height: 50%;
+  }
+
+  #CENTER {
+    flex-flow: row;
+  }
+
+  #SELECTOR {
+    flex-flow: row;
+  }
+
+  #TOOLS {
+    flex-flow: row;    
+  }
+
+#SELECTOR a {
+  border: none !important;
+  border-left: 1px solid white;
+}
+
+#TOOLS a {
+  border: none !important;
+  border-left: 1px solid white;
+}
+
+  /* #CODE */
+}

@@ -13,10 +13,10 @@ import defaultPatch from './components/default'
 
 let style = {
   output: {
-    width: '50%'
+    // width: '50%'
   },
   code: {
-    width: '50%'
+    // width: '50%'
   }
 }
 
@@ -115,37 +115,30 @@ class App extends React.Component {
   handleExpand = e => {
     this.setState({expand: e})
 
-    let code_display = "block";
-    let code_width = "50%";
-    let output_display = "block";
-    let output_width = "50%";
+    let code_display, output_display = "block";
 
-    if (e === '<'){
+    if (e === 1){
       code_display = "none";
-      code_width = "0%";
       output_display = "block";
-      output_width = "100%";
-    } else if (e === '>') {
+    } else if (e === 2) {
       code_display = "block";
-      code_width = "100%";
       output_display = "none";
-      output_width = "0%";
     }
 
     style = {
       ...style,
       code: {
         display: code_display,
-        width: code_width
       },
       output: {
         display: output_display,
-        width: output_width
       }
     }
   }
 
   render() {
+    let isPortrait = window.innerWidth < 600;
+
     return (
       <div id="APP">
         <div id="TOOLBAR">
@@ -192,17 +185,14 @@ class App extends React.Component {
 
             <div id="TOOLS">
               <a 
-                onClick={()=>this.handleExpand('|')}
-                // className={this.state.expand === '|' ? 'invert' : ''}
-              >{'|'}</a>
+                onClick={()=>this.handleExpand(0)}
+              >{isPortrait ? '=' : '|'}</a>
               <a 
-                onClick={()=>this.handleExpand('<')}
-                // className={this.state.expand === '<' ? 'invert' : ''}
-              >{'<'}</a>
+                onClick={()=>this.handleExpand(1)}
+              >{isPortrait ? '^' : '<'}</a>
               <a 
-                onClick={()=>this.handleExpand('>')}
-                // className={this.state.expand === '>' ? 'invert' : ''}
-              >{'>'}</a>              
+                onClick={()=>this.handleExpand(2)}
+              >{isPortrait ? 'v' : '>'}</a>              
             </div>
           </div>
 
