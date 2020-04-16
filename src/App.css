@@ -4,6 +4,14 @@ html, body, #root {
   font-family: 'monospace';
 }
 
+button {
+  outline: none;
+}
+
+.error-marker {
+  position: absolute;
+}
+
 #APP {
   width: 100%;
   height: 100%;
@@ -33,13 +41,12 @@ html, body, #root {
   justify-content: space-between;
 }
 
-#CENTER a {
+#CENTER button {
   padding: 5px;
   font-family: monospace;
   background-color: black;
   color: white;
   border: none;
-  
 }
 
 #SELECTOR {
@@ -47,11 +54,11 @@ html, body, #root {
   flex-flow: column;
 }
 
-#SELECTOR a{
+#SELECTOR button{
   border-bottom: 1px solid white;
 }
 
-#TOOLS a {
+#TOOLS button {
   border-top: 1px solid white;
   /* padding-bottom: 10px; */
   /* font-size:1.2em; */
@@ -64,7 +71,7 @@ html, body, #root {
 }
 
 
-#CENTER a:hover, 
+#CENTER button:hover, 
 .invert {
   background-color: white !important;
   color: black !important;
@@ -72,7 +79,7 @@ html, body, #root {
   border-color: black !important;
 }
 
-#TOOLS a:hover {
+#TOOLS button:hover {
   /* border: none !important; */
   border-color: black !important;
 }
@@ -105,13 +112,15 @@ html, body, #root {
   flex-flow: row;
   align-items: center;
   justify-content: space-around;
+  overflow:hidden;
 }
 
-@media only screen and (max-width: 600px){
+@media only screen and (max-width: 800px){
 
   #MAIN {
     flex-flow: column;
     width: 100%;
+    height:100%;
   }
 
   #CODE, #OUTPUT {
@@ -131,12 +140,12 @@ html, body, #root {
     flex-flow: row;    
   }
 
-#SELECTOR a {
+#SELECTOR button {
   border: none !important;
   border-left: 1px solid white;
 }
 
-#TOOLS a {
+#TOOLS button {
   border: none !important;
   border-left: 1px solid white;
 }

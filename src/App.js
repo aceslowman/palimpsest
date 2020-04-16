@@ -13,10 +13,10 @@ import defaultPatch from './components/default'
 
 let style = {
   output: {
-    // width: '50%'
+    display: 'block',
   },
   code: {
-    // width: '50%'
+    display: 'block',
   }
 }
 
@@ -24,12 +24,13 @@ class App extends React.Component {
   constructor() {
     super();
 
-    this.state = {
-      output: "",   
+    this.state = { 
       code: defaultPatch,
       result: "",   
-      files: [],
-      activePanel: null
+      files: new Array(10).fill(""),
+      output: "",
+      activePanel: null,
+      currentError: null,
     }
   }
 
@@ -38,7 +39,7 @@ class App extends React.Component {
     this.selectView();
   }
 
-  executeCode(code) {
+  executeCode() {
     try {         
       let res = new Function('txt', `  
         var output = [];
@@ -52,12 +53,12 @@ class App extends React.Component {
           return arr[Math.floor(Math.random()*arr.length)]
         }
 
-        ` + code + `
+        ` + this.state.code + `
 
         if (output) return output.join('\\r\\n\\r\\n');
       `).call(
         null, 
-        this.state.files.map(f => f.content)
+        this.state.files
       );
       
       this.setState({
@@ -65,12 +66,13 @@ class App extends React.Component {
       });
     } catch (err) { 
       // console.log(err) 
+      // output to ace editor
     }
   }
  
   handleChange = e => {    
     this.setState({code: e});
-    this.executeCode(e);
+    this.executeCode();
     this.selectView();
   }
 
@@ -78,35 +80,25 @@ class App extends React.Component {
     for(let file of e.target.files){
       let fileReader = new FileReader();
       fileReader.onloadend = (f) => {
-        // console.log('fin',f.target.name)
-
         this.setState(prev => ({
-          files: [...prev.files, {
-            name: f.target.name,
-            content: f.target.result
-          }]
+          files: [f.target.result]
         }))
-
-        // console.log(this.state.files)
       };
-      fileReader.name = file.name;
       fileReader.readAsText(file);
     } 
   }
 
   selectView = i => {
-    if (i === undefined) {   
-      // console.log('showing main output')   
+    if (i === undefined) {         
       this.setState(prev => ({
         ...prev,
         output: prev.result,
         activePanel: null,
       }));
     } else {
-      // console.log('showing ' + i + " output")
       this.setState(prev => ({
         ...prev,
-        output: prev.files[i].content,
+        output: prev.files[i],
         activePanel: i
       }));
     }
@@ -136,6 +128,16 @@ class App extends React.Component {
     }
   }
 
+  handleTextChange = e => {
+    // console.log('hit',e.target.value)
+    this.setState({
+      files: this.state.files.map((item, index) =>
+        index === this.state.activePanel ? e.target.value : item,
+      ),
+      output: e.target.value
+    })
+  }
+
   render() {
     let isPortrait = window.innerWidth < 600;
 
@@ -152,53 +154,69 @@ class App extends React.Component {
         <div id="MAIN">
           <div id="CODE" style={style.code}>
             <AceEditor
+              name = "EDITOR"
               mode="javascript"
               theme="github"
+              debounceChangePeriod={100}
               onChange={this.handleChange}              
               width="100%"
               height="100%" 
               value={this.state.code}             
               wrapEnabled={true}
-              name="EDITOR"
               placeholder={defaultPatch}
               fontSize="16px"
-            />
+              commands = {
+                [{ 
+                  name: 'execute',
+                  bindKey: {
+                    win: 'Ctrl-Enter',
+                    mac: 'Command-Enter'
+                  },
+                  exec: () => this.executeCode
+                }]
+              }
+              />
           </div>
           <div id="CENTER">
             <div id="SELECTOR">
-                <a 
+                <button 
                   onClick={()=>this.selectView()}
                   className={this.state.activePanel == null ? 'invert': ''}
-                >*</a>
+                >*</button>
                 {
                   this.state.files.map((f,i)=>{
                     return (
-                      <a 
+                      <button 
                         key={i}
                         onClick={()=>this.selectView(i)}
                         className={this.state.activePanel === i ? 'invert': ''}  
-                      >{i}</a>
+                      >{i}</button>
                     )
                   })
                 }
             </div>
 
             <div id="TOOLS">
-              <a 
+              <button 
                 onClick={()=>this.handleExpand(0)}
-              >{isPortrait ? '=' : '|'}</a>
-              <a 
+              >{isPortrait ? '=' : '|'}</button>
+              <button 
                 onClick={()=>this.handleExpand(1)}
-              >{isPortrait ? '^' : '<'}</a>
-              <a 
+              >{isPortrait ? '^' : '<'}</button>
+              <button 
                 onClick={()=>this.handleExpand(2)}
-              >{isPortrait ? 'v' : '>'}</a>              
+              >{isPortrait ? 'v' : '>'}</button>              
             </div>
           </div>
 
-          <div id="OUTPUT" style={style.output}>          
-            {this.state.output}
-          </div>
+          <textarea 
+            id="OUTPUT" 
+            readOnly={(this.state.activePanel !== null ? false : true)}
+            style={style.output}
+            value={this.state.output}
+            onChange={this.handleTextChange}
+          />
+
         </div>
       </div>
     );  

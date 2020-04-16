@@ -13,6 +13,11 @@ export default `
     each method applied to it will update
     on the opposite side of the screen.
 
+    you can also execute the code by typing
+    (windows, linux) ctrl-enter
+        or
+    (mac) cmd-enter
+
 */
 "palimpsest is a text manipulation toolkit"
     .reverse(true)
@@ -165,10 +170,20 @@ random(txt)
 /*
     palimpsest was made in 2020
     
-    austin słominski
+    by austin słominski
     @aceslowman (on twitter, ig)
     austin@aceslowman.com
 
-    i'd love to see what you make
-    with the tool!
+    this project was inspired by
+    live coding tools like:
+
+    hydra (by Olivia Jack)
+        https://github.com/ojack/hydra
+
+    orca (by hundredrabbits)
+        https://github.com/hundredrabbits/Orca
+
+    TidalCycles
+        https://tidalcycles.org
+
 */`
