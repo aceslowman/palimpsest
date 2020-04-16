@@ -188,6 +188,9 @@ by austin słominski
 @aceslowman (on twitter, ig)
 austin@aceslowman.com
 
+the code for this project is located at it's github page
+https://github.com/aceslowman/palimpsest
+
 #### this project was inspired by live coding tools like:
 
 hydra ([@_ojack_](https://twitter.com/_ojack_))
