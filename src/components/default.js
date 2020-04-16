@@ -1,6 +1,6 @@
 export default `
 /*
-    palimpsest is a text manipulation toolkit
+    PALIMPSEST is a text manipulation toolkit
 
 
     basic concepts
@@ -19,9 +19,8 @@ export default `
     (mac) cmd-enter
 
 */
-"palimpsest is a text manipulation toolkit"
-    .reverse(true)
-    .out()
+"PALIMPSEST is a text manipulation toolkit"
+    .scramble(true).out();
 
 "it allows you to send text through a number of processes, which are defined at the bottom of this page".out();
 /*
@@ -46,19 +45,24 @@ export default `
 
 /*  
 
-    file input
+    text buffers 
     -----------------------------------------
-    this tool can also handle multiple file 
-    uploads by using the file chooser at the 
-    top of the page.
+    this tool can also handle text documents 
+    by selecting from numbers 0-9 in the 
+    middle toolbar.
     
-    each text file will be loaded into an 
-    array, accessible here as 
+    each text buffer exists in an array, 
+    accessible as 
         txt[index of file].
 
-    below, the first uploaded file (numbers
+    below, the first text buffer (numbers
     starting at zero) is reversed.
         txt[0].reverse()
+        
+    you can also upload multiple files using
+    the chooser at the top of the page.
+    (note: your existing buffers will be
+    overwritten)
 
 
     selector
@@ -79,7 +83,19 @@ export default `
 
 "and use them in your code by accessing the txt array. the first file would be accessed as txt[0], as arrays begin at zero.".out()
 
-// ABOUT THE METHODS
+// ABOUT THE METHODS ------------------------
+/*
+    decimate(amount, substitute = '-')
+    filterRepeat(invert = false)
+    superimpose(txt2, delineate = ' ')
+    interleave(txt2, amount = 1.0, words = false)
+    reverse(words = true)
+    scramble(words = true)
+
+    random(arr = txt)
+    out()
+*/
+// ------------------------------------------
 
 /*
     decimate(amount, substitute = '-')
@@ -93,7 +109,7 @@ export default `
     decimating words instead.
 */
 
-"".decimate(0.2, '-').out()
+"let your text decay".decimate(0.2, '-').out()
 
 /*
     filterRepeat(invert = false)
@@ -105,9 +121,9 @@ export default `
     that only the repeats will be displayed.
 */
 
-"".filterRepeat().out()
+"only the first occurrence of the word will appear".filterRepeat().out()
 
-"".filterRepeat(true).out()
+"when inverted, only the repeated words will appear".filterRepeat(true).out()
 
 /*
     superimpose(txt2, delineate = ' ')
@@ -117,7 +133,7 @@ export default `
     document with the second.
 */
 
-"".superimpose("HELLO WORLD").out()
+"lay two texts on top of each other".superimpose("THE TEXT ON TOP").out()
 
 /*
     interleave(txt2, amount = 1.0, words = false)
@@ -129,7 +145,9 @@ export default `
     the texts at the given percentage.
 */
 
-"".out()
+"you can perform text weaving"
+    .interleave("to get interesting combinations of material", 1.0, true)
+    .out()
 
 /*
     reverse(words = true)
@@ -140,8 +158,17 @@ export default `
     by passing false as an argument, it will
     reverse individual characters instead.
 */
-"".reverse().out()
-"".reverse(false).out()
+"you can read forward or backwards".reverse().out()
+"you can read forward or backwards".reverse(true).out()
+
+/*
+    scramble(words = true)
+    -----------------------------------------
+    scramble will mix up all of the words or
+    individual characters of a string.
+*/
+"some text is better scrambled".reverse().out()
+"some text is better scrambled".reverse(true).out()
 
 /*
     random(arr = txt)
@@ -158,7 +185,12 @@ export default `
     if no arguments are passed, it will get 
     the txt array by default.
 */
-"".out();
+random(
+    [
+        "anything can be passed as an array",
+        "it can work on text and on numbers".decimate(random([0.1,0.8]))
+    ]
+).out();
 
 /* for example
 random(txt)

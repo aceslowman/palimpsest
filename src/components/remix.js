@@ -78,6 +78,30 @@ function reverse(txt, words = true) {
     return arr.reverse().join(words ? ' ' : '')
 }
 
-String.prototype.reverse = function (words = false) {
+String.prototype.reverse = function (words = true) {
     return reverse(this.toString(), words);
+}
+
+//--------------------------------------------------------------------
+// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+function scramble(txt, words = true) {
+    let array = txt.split(words ? ' ' : '');
+    var currentIndex = array.length,
+    temporaryValue, randomIndex;
+
+    while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+
+    return array.join(words ? ' ' : '');
+}
+
+String.prototype.scramble = function (words = false) {
+    return scramble(this.toString(), words);
 }
