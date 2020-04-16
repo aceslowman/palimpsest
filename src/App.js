@@ -11,6 +11,15 @@ import './components/remix';
 
 import defaultPatch from './components/default' 
 
+let style = {
+  output: {
+    width: '50%'
+  },
+  code: {
+    width: '50%'
+  }
+}
+
 class App extends React.Component {
   constructor() {
     super();
@@ -103,6 +112,39 @@ class App extends React.Component {
     }
   }
 
+  handleExpand = e => {
+    this.setState({expand: e})
+
+    let code_display = "block";
+    let code_width = "50%";
+    let output_display = "block";
+    let output_width = "50%";
+
+    if (e === '<'){
+      code_display = "none";
+      code_width = "0%";
+      output_display = "block";
+      output_width = "100%";
+    } else if (e === '>') {
+      code_display = "block";
+      code_width = "100%";
+      output_display = "none";
+      output_width = "0%";
+    }
+
+    style = {
+      ...style,
+      code: {
+        display: code_display,
+        width: code_width
+      },
+      output: {
+        display: output_display,
+        width: output_width
+      }
+    }
+  }
+
   render() {
     return (
       <div id="APP">
@@ -113,10 +155,9 @@ class App extends React.Component {
             onChange={this.handleFileChooser}
             multiple
           />
-          {/* <button onClick={()=>{}}>invert colors</button> */}
         </div>
         <div id="MAIN">
-          <div id="CODE">
+          <div id="CODE" style={style.code}>
             <AceEditor
               mode="javascript"
               theme="github"
@@ -130,26 +171,42 @@ class App extends React.Component {
               fontSize="16px"
             />
           </div>
-          <div id="SELECTOR">
+          <div id="CENTER">
+            <div id="SELECTOR">
+                <a 
+                  onClick={()=>this.selectView()}
+                  className={this.state.activePanel == null ? 'invert': ''}
+                >*</a>
+                {
+                  this.state.files.map((f,i)=>{
+                    return (
+                      <a 
+                        key={i}
+                        onClick={()=>this.selectView(i)}
+                        className={this.state.activePanel === i ? 'invert': ''}  
+                      >{i}</a>
+                    )
+                  })
+                }
+            </div>
 
+            <div id="TOOLS">
               <a 
-                onClick={()=>this.selectView()}
-                className={this.state.activePanel == null ? 'invert': ''}
-              >*</a>
-              {
-                this.state.files.map((f,i)=>{
-                  return (
-                    <a 
-                      key={i}
-                      onClick={()=>this.selectView(i)}
-                      className={this.state.activePanel === i ? 'invert': ''}  
-                    >{i}</a>
-                  )
-                })
-              }
-
+                onClick={()=>this.handleExpand('|')}
+                // className={this.state.expand === '|' ? 'invert' : ''}
+              >{'|'}</a>
+              <a 
+                onClick={()=>this.handleExpand('<')}
+                // className={this.state.expand === '<' ? 'invert' : ''}
+              >{'<'}</a>
+              <a 
+                onClick={()=>this.handleExpand('>')}
+                // className={this.state.expand === '>' ? 'invert' : ''}
+              >{'>'}</a>              
+            </div>
           </div>
-          <div id="OUTPUT">          
+
+          <div id="OUTPUT" style={style.output}>          
             {this.state.output}
           </div>
         </div>
