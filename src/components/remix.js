@@ -72,7 +72,7 @@ String.prototype.interleave = function (txt2, amount = 1.0, words = false) {
     reverse will reverse the order of characters (or words)
     in a string
 */
-function reverse(txt, words = false) {
+function reverse(txt, words = true) {
     let arr = txt.split(words ? ' ' : '');    
 
     return arr.reverse().join(words ? ' ' : '')

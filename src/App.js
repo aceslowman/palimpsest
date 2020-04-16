@@ -38,8 +38,9 @@ class App extends React.Component {
           output.push(this.toString());
         }
 
-        function random() {
-          return txt[Math.floor(Math.random()*txt.length)]
+        function random(arr = txt) {
+          console.log(arr)
+          return arr[Math.floor(Math.random()*arr.length)]
         }
 
         ` + code + `
