@@ -8,6 +8,7 @@ import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-github";
 
 import './components/remix';
+// import {LSTMTextGenerator} from './components/lstm';
 
 import defaultPatch from './components/default' 
 
@@ -39,6 +40,8 @@ class App extends React.Component {
   componentDidMount() {  
     this.executeCode(this.state.code);
     this.selectView();
+
+    // let lstm = new LSTMTextGenerator();
   }
 
   executeCode() {
@@ -154,6 +157,33 @@ class App extends React.Component {
     })
   }
 
+  handleRandom = () => {
+    // wget -w 2 -m -H "http://www.gutenberg.org/robot/harvest?filetypes[]=html"
+    // let url = `https://openlibrary.org/api/books?bibkeys=ISBN:0451526538`;
+    // let url = "https://www.folgerdigitaltexts.org/WT/text/";
+    // fetch(url, {
+    //   method: 'GET',
+    //   // mode: 'no-cors',
+    //   headers: {
+    //     'Content-Type': "text/plain",
+    //   }
+    // }).then((res)=>{
+    //   console.log(res.json().stringify())
+    // })
+  }
+
+  handleClear = () => {
+    this.setState(prev => ({
+      ...prev,
+      code: "",
+      result: "",   
+      files: new Array(10).fill(""),
+      output: "",
+      activePanel: null,
+      currentError: null,
+    }));
+  }
+
   render() {
     let isPortrait = window.innerWidth < 600;
 
@@ -214,17 +244,28 @@ class App extends React.Component {
 
             <div id="TOOLS">
               <button 
+                onClick={this.handleClear}
+                title="clear all"                
+              >{'c'}</button>
+              {/* <button 
+                onClick={this.handleRandom}                
+              >{'r'}</button> */}
+              <button 
                 onClick={this.handleWrap}
                 className={this.state.wrap ? 'invert': ''}  
+                title="toggle break"
               >{'w'}</button>
               <button 
                 onClick={()=>this.handleExpand(0)}
+                title="split"
               >{isPortrait ? '=' : '|'}</button>
               <button 
                 onClick={()=>this.handleExpand(1)}
+                title="expand output"
               >{isPortrait ? '^' : '<'}</button>
               <button 
                 onClick={()=>this.handleExpand(2)}
+                title="expand code"
               >{isPortrait ? 'v' : '>'}</button>              
             </div>
           </div>
