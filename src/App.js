@@ -14,6 +14,7 @@ import defaultPatch from './components/default'
 let style = {
   output: {
     display: 'block',
+    wordBreak: 'break-all',
   },
   code: {
     display: 'block',
@@ -31,6 +32,7 @@ class App extends React.Component {
       output: "",
       activePanel: null,
       currentError: null,
+      wrap: false
     }
   }
 
@@ -49,7 +51,6 @@ class App extends React.Component {
         }
 
         function random(arr = txt) {
-          console.log(arr)
           return arr[Math.floor(Math.random()*arr.length)]
         }
 
@@ -128,6 +129,21 @@ class App extends React.Component {
     }
   }
 
+  handleWrap = () => {
+    this.setState(prev=>({
+      ...prev,
+      wrap: !prev.wrap
+    }));
+
+    style = {
+      ...style,
+      output: {
+        ...style.output,
+        wordBreak: !this.state.wrap ? 'break-word' : 'break-all'
+      }
+    }
+  }
+
   handleTextChange = e => {
     // console.log('hit',e.target.value)
     this.setState({
@@ -163,7 +179,7 @@ class App extends React.Component {
               height="100%" 
               value={this.state.code}             
               wrapEnabled={true}
-              placeholder={defaultPatch}
+              // placeholder={defaultPatch}
               fontSize="16px"
               commands = {
                 [{ 
@@ -197,6 +213,10 @@ class App extends React.Component {
             </div>
 
             <div id="TOOLS">
+              <button 
+                onClick={this.handleWrap}
+                className={this.state.wrap ? 'invert': ''}  
+              >{'w'}</button>
               <button 
                 onClick={()=>this.handleExpand(0)}
               >{isPortrait ? '=' : '|'}</button>

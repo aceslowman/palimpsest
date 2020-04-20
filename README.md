@@ -76,6 +76,10 @@ the text can be retrieved using this number
     * [interleave (txt2, amount = 1.0, words = false)](#interleave)
     * [reverse (words = true)](#reverse)
     * [scramble (words = true)](#scramble)
+    * [alphabetize(words = true)](#alphabetize)
+    * [sortLength()](#sortLength)
+    * [isolate(match = '', words = true, invert = false)](#isolate)
+    * [stanza(nlines = 2, split = '.')](#stanza)
 * other
     * [random (arr = txt)](#random)
     * [out ()](#out)
@@ -151,6 +155,30 @@ scramble will mix up all of the words or individual characters of a string.
 "some text is better scrambled".reverse().out()
 "some text is better scrambled".reverse(true).out()
 ```
+
+-----------------------------------------
+### alphabetize
+##### *alphabetize (words = true)*
+
+alphabetize will reorder a string either by word or by character
+
+-----------------------------------------
+### sortLength
+##### *sortLength*
+
+sortLength will reorder the words in a string by their length
+
+-----------------------------------------
+### isolate
+##### *isolate(match = '', words = true, invert = false)*
+
+isolate will remove all words or characters that fail to match the provided string
+
+-----------------------------------------
+### stanza
+##### *stanza(nlines = 2, split = '.')*
+
+stanza will split a string (by each period by default) and insert a number of linebreaks
 
 -----------------------------------------
 ### random

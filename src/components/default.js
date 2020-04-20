@@ -91,6 +91,10 @@ export default `
     interleave(txt2, amount = 1.0, words = false)
     reverse(words = true)
     scramble(words = true)
+    alphabetize(words = true)
+    sortLength()
+    isolate(match = '', words = true, invert = false)
+    stanza(nlines = 2, split = '.')
 
     random(arr = txt)
     out()
@@ -136,7 +140,7 @@ export default `
 "lay two texts on top of each other".superimpose("THE TEXT ON TOP").out()
 
 /*
-    interleave(txt2, amount = 1.0, words = false)
+    interleave(txt2, amount = 1.0, words = true)
     -----------------------------------------
     interleave will output a string that 
     alternates the characters(or words) 
@@ -169,6 +173,43 @@ export default `
 */
 "some text is better scrambled".reverse().out()
 "some text is better scrambled".reverse(true).out()
+
+/*
+    alphabetize(words = true)
+    -----------------------------------------
+    alphabetize will reorder a string either 
+    by word or by character
+*/
+"The small room into which the young man was shown was decorated with yellow wallpaper: there were geraniums and muslin curtains in the windows; the setting sun cast a harsh light over all.".alphabetize().out()
+
+/*
+    sortLength()
+    -----------------------------------------
+    sortLength will reorder the words in a 
+    string by their length
+
+    ?: should I have a general sort method
+    that accepts 'alpha' or 'length', etc?
+*/
+"The author seizes on a character, and, this being granted, makes the hero wander about the world. Whatever occurs, this hero, whose actions and reactions are admirably predictable, must not disturb, despite seeming to be about to do so, the calculations of which he is the object.".sortLength().out()
+
+/*
+    isolate(match = '', words = true, invert = false)
+    -----------------------------------------
+    isolate will remove all words or
+    characters that fail to match the 
+    provided string
+*/
+"If a bunch of grapes contains no two alike, why do you need me to describe this grape among others, among all others, to make a grape worth eating?".isolate('grape', true, true).out()
+
+/*
+    stanza(nlines = 2, split = '.')
+    -----------------------------------------
+    stanza will split a string (by each period
+    by default) and insert a number of 
+    linebreaks
+*/
+"We are still living under the rule of logic, that, of course, is what I am driving at. But in our day, logical procedures are only applicable in solving problems of secondary interest. The absolute rationalism still in fashion only allows us to consider facts directly related to our own experience. The aims of logic, in contrast, escape us.".stanza(3).out()
 
 /*
     random(arr = txt)
