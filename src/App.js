@@ -8,9 +8,9 @@ import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-github";
 
 import './components/remix';
-// import {LSTMTextGenerator} from './components/lstm';
 
 import defaultPatch from './components/default' 
+import placeholder from './components/placeholder'
 
 let style = {
   output: {
@@ -26,22 +26,22 @@ class App extends React.Component {
   constructor() {
     super();
 
-    this.state = { 
-      code: defaultPatch,
-      result: "",   
-      files: new Array(10).fill(""),
-      output: "",
-      activePanel: null,
-      currentError: null,
-      wrap: false
-    }
+    localStorage.clear();
+
+    this.state = JSON.parse(localStorage.getItem('palimpsest-state')) ?
+      JSON.parse(localStorage.getItem('palimpsest-state')) :
+      {
+        code: defaultPatch,
+        files: new Array(10).fill(""),
+        output: "",
+        activePanel: null,
+        wrap: false
+      };      
   }
 
   componentDidMount() {  
-    this.executeCode(this.state.code);
+    this.executeCode();
     this.selectView();
-
-    // let lstm = new LSTMTextGenerator();
   }
 
   executeCode() {
@@ -49,8 +49,9 @@ class App extends React.Component {
       let res = new Function('txt', `  
         var output = [];
         
-        String.prototype.out = function(){
-          output.push(this.toString());
+        String.prototype.out = function(element = 'p'){
+          if(element)
+            output.push({element: element, text: this.toString()});
         }
 
         function random(arr = txt) {
@@ -59,19 +60,21 @@ class App extends React.Component {
 
         ` + this.state.code + `
 
-        if (output) return output.join('\\r\\n\\r\\n');
-      `).call(
-        null, 
-        this.state.files
-      );
+        if (output) return output;
+      `).call(null, this.state.files);
       
-      this.setState({
-        result: res
-      });
-    } catch (err) { 
-      // console.log(err) 
-      // output to ace editor
-    }
+      this.setState(prev => ({
+        ...prev,
+        output: res.map((e, i) => {
+          return React.createElement(
+            e.element, {
+              key: i
+            },
+            e.text
+          );
+        })
+      }));
+    } catch (err) {console.log(err)}
   }
  
   handleChange = e => {    
@@ -81,31 +84,25 @@ class App extends React.Component {
   }
 
   handleFileChooser = e => {  
+    this.setState({files: []});
+
     for(let file of e.target.files){
       let fileReader = new FileReader();
-      fileReader.onloadend = (f) => {
-        this.setState(prev => ({
-          files: [f.target.result]
+      fileReader.onloadend = f => {
+        this.setState(prev=>({
+          files: [...prev.files,f.target.result]
         }))
       };
       fileReader.readAsText(file);
     } 
   }
 
-  selectView = i => {
-    if (i === undefined) {         
-      this.setState(prev => ({
-        ...prev,
-        output: prev.result,
-        activePanel: null,
-      }));
-    } else {
-      this.setState(prev => ({
-        ...prev,
-        output: prev.files[i],
-        activePanel: i
-      }));
-    }
+  selectView = i => { 
+    this.setState(prev => ({
+      ...prev,
+      activeFile: (i === undefined) ? null : i,
+      activePanel: (i === undefined) ? null : i,
+    }));
   }
 
   handleExpand = e => {
@@ -148,13 +145,11 @@ class App extends React.Component {
   }
 
   handleTextChange = e => {
-    // console.log('hit',e.target.value)
     this.setState({
       files: this.state.files.map((item, index) =>
         index === this.state.activePanel ? e.target.value : item,
-      ),
-      output: e.target.value
-    })
+      ),      
+    });
   }
 
   handleRandom = () => {
@@ -184,9 +179,13 @@ class App extends React.Component {
     }));
   }
 
+  handleSave = () => {
+    localStorage.setItem('palimpsest-state', JSON.stringify(this.state));
+  }
+
   render() {
     let isPortrait = window.innerWidth < 600;
-
+    
     return (
       <div id="APP">
         <div id="TOOLBAR">
@@ -209,7 +208,7 @@ class App extends React.Component {
               height="100%" 
               value={this.state.code}             
               wrapEnabled={true}
-              // placeholder={defaultPatch}
+              placeholder={placeholder}
               fontSize="16px"
               commands = {
                 [{ 
@@ -223,7 +222,9 @@ class App extends React.Component {
               }
               />
           </div>
+
           <div id="CENTER">
+            
             <div id="SELECTOR">
                 <button 
                   onClick={()=>this.selectView()}
@@ -247,6 +248,10 @@ class App extends React.Component {
                 onClick={this.handleClear}
                 title="clear all"                
               >{'c'}</button>
+              <button 
+                onClick={this.handleSave}
+                title="save all"                
+              >{'s'}</button>
               {/* <button 
                 onClick={this.handleRandom}                
               >{'r'}</button> */}
@@ -270,14 +275,16 @@ class App extends React.Component {
             </div>
           </div>
 
-          <textarea 
-            id="OUTPUT" 
-            readOnly={(this.state.activePanel !== null ? false : true)}
-            style={style.output}
-            value={this.state.output}
-            onChange={this.handleTextChange}
-          />
-
+          <div id="OUTPUT" style={style.output}>
+            {this.state.activePanel !== null && 
+              <textarea               
+                value={this.state.files[this.state.activeFile]}
+                onChange={this.handleTextChange}
+              />
+            }
+            { this.state.activePanel === null && (<div>{this.state.output}</div>) }
+          </div>
+          
         </div>
       </div>
     );  

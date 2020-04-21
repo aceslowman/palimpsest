@@ -19,10 +19,9 @@ export default `
     (mac) cmd-enter
 
 */
-"PALIMPSEST is a text manipulation toolkit"
-    .scramble(true).out();
+"palimpsest is a text manipulation toolkit".scramble(false).toAscii(1457).out('h1')
 
-"it allows you to send text through a number of processes, which are defined at the bottom of this page".out();
+"it allows you to send text through a number of processes, which are defined at the bottom of this page".toAscii(1457).out();
 /*
 
     chaining
@@ -95,9 +94,10 @@ export default `
     sortLength()
     isolate(match = '', words = true, invert = false)
     stanza(nlines = 2, split = '.')
+    toAscii(offset = 65)
 
     random(arr = txt)
-    out()
+    out(element = 'p')
 */
 // ------------------------------------------
 
@@ -212,6 +212,14 @@ export default `
 "We are still living under the rule of logic, that, of course, is what I am driving at. But in our day, logical procedures are only applicable in solving problems of secondary interest. The absolute rationalism still in fashion only allows us to consider facts directly related to our own experience. The aims of logic, in contrast, escape us.".stanza(3).out()
 
 /*
+    toAscii(offset = 0)
+    -----------------------------------------
+    map the current letter to a symbol in 
+    unicode, an offset can be provided 
+*/
+"take a string and replace it with other symbols".toAscii(1417).out()
+
+/*
     random(arr = txt)
     -----------------------------------------
     the random command can be used to select 
@@ -238,6 +246,14 @@ random(txt)
     .reverse(true)
     .interleave(random(txt), , true)
     .out()
+*/
+
+/*
+    out(element = 'p')
+    -----------------------------------------
+    out will send an html element of the given 
+    type to the output window. by default, all
+    elements are paragraphs.
 */
 
 /*

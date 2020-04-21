@@ -4,7 +4,7 @@ html, body, #root {
   font-family: 'monospace';
 }
 
-button {
+button, textarea {
   outline: none;
 }
 
@@ -30,7 +30,7 @@ button {
 #CODE {  
   width: 50%;
   box-sizing: border-box;
-      flex-grow: 1;
+  flex-grow: 1;
 } 
 
 #CENTER {
@@ -60,8 +60,6 @@ button {
 
 #TOOLS button {
   border-top: 1px solid white;
-  /* padding-bottom: 10px; */
-  /* font-size:1.2em; */
   color:white;
 }
 
@@ -70,32 +68,47 @@ button {
   flex-flow: column;
 }
 
-
 #CENTER button:hover, 
 .invert {
   background-color: white !important;
   color: black !important;
-  /* border: none !important; */
   border-color: black !important;
 }
 
 #TOOLS button:hover {
-  /* border: none !important; */
   border-color: black !important;
 }
 
 #OUTPUT {
   width: 50%;
-  padding: 30px;
-  box-sizing: border-box;
+  height: 100%;
   font-size: 16px;
-  overflow-x: hidden;
-  overflow-y: scroll;
   background-color: black;
   color: white;
+  flex-grow: 1;
+  font-family: monospace;
   white-space: pre-wrap;
   word-break: break-all;
-  flex-grow: 1;
+}
+
+#OUTPUT div {
+  height: 100%;
+  padding: 30px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+#OUTPUT textarea {
+  width: 100%;
+  padding: 30px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  box-sizing: border-box;
+  resize: none;
+  font-size: 16px;
+  min-height: 100%;
+  background-color: black;
+  color: white;
   font-family: monospace;
 }
 
@@ -105,6 +118,7 @@ button {
 
 #TOOLBAR {
   width: 100%;
+  flex-shrink: 0;
   /* padding: 15px; */
   box-sizing: border-box;
   border-bottom: 1px solid black;

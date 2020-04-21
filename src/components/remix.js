@@ -241,3 +241,21 @@ function stanza(txt, nlines = 2, split = '.') {
 String.prototype.stanza = function (nlines = 2, split = '.') {
     return stanza(this.toString(),nlines,split);
 }
+
+/*
+    toAscii(offset = 0)
+    -----------------------------------------
+    map the current letter to a symbol in 
+    unicode, an offset can be provided 
+*/
+function toAscii(txt, offset = 65) {
+    var alphabet = 'abcdefghijklmnopqrstuvwxyz';
+
+    return txt.split('').map((e,i)=>{
+        return (e !== ' ') ? String.fromCharCode(alphabet.indexOf(e) + offset) : ' '
+    }).join('');
+}
+
+String.prototype.toAscii = function (offset = 65) {
+    return toAscii(this.toString(), offset);
+}

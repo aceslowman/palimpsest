@@ -14,7 +14,7 @@ you can also execute the code by typing
 
 ```
 "PALIMPSEST is a text manipulation toolkit"
-    .scramble(true).out();
+    .scramble(true).out('h1');
 
 "it allows you to send text through a number of processes, which are defined at the bottom of this page".out();
 ```
@@ -80,9 +80,10 @@ the text can be retrieved using this number
     * [sortLength()](#sortLength)
     * [isolate(match = '', words = true, invert = false)](#isolate)
     * [stanza(nlines = 2, split = '.')](#stanza)
+    * [toAscii(offset = 0)](#toAscii)
 * other
     * [random (arr = txt)](#random)
-    * [out ()](#out)
+    * [out (element = 'p')](#out)
 
 -----------------------------------------
 ### decimate
@@ -181,6 +182,13 @@ isolate will remove all words or characters that fail to match the provided stri
 stanza will split a string (by each period by default) and insert a number of linebreaks
 
 -----------------------------------------
+### toAscii
+##### *toAscii (offset = 65)*
+
+map the current letter to a symbol in 
+unicode, an offset can be provided 
+
+-----------------------------------------
 ### random
 ##### *random (arr = txt)*
 
@@ -209,8 +217,16 @@ random(txt)
     .out()
 */
 ```
+-----------------------------------------
+### out
+##### *out(element = 'p')*
 
-#### palimpsest was made in 2020
+out will send an html element of the given type to the output window. by default, all elements are paragraphs.
+
+options include 'p', 'h1', 'h2', 'h3', 'h4', and more
+
+-----------------------------------------
+### palimpsest was made in 2020
 
 by austin słominski
 @aceslowman (on twitter, ig)
