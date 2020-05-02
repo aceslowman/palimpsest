@@ -510,6 +510,4 @@ Array.prototype.weave = function (arr2 = []) {
     return this;
 }
 
-module.exports = {
-    Text: Text
-}
+export default Text

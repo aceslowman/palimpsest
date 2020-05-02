@@ -7,7 +7,7 @@ import 'ace-builds/webpack-resolver';
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-github";
 
-import * as PALIMPSEST from './components/remix';
+import Text from './components/remix';
 
 import defaultPatch from './components/default' 
 import placeholder from './components/placeholder'
@@ -51,17 +51,17 @@ class App extends React.Component {
 
   executeCode() {    
     try {         
-      let res = new Function('txt','pLib','output',`        
+      let res = new Function('txt','Text','output',`        
         output = [];
 
-        pLib.Text.prototype.out = function () {
+        Text.prototype.out = function () {
           output.push(this);
           return this;
         }
         
         String.prototype.out = function (element = 'p') {
           output.push(
-            new pLib.Text(
+            new Text(
               this.toString(),
               (element && element !== '') ? element : 'p'
             )
@@ -76,7 +76,7 @@ class App extends React.Component {
               if (item.constructor.name === 'Text' && item !== null) {                
                 output.push(item);
               } else {
-                output.push(new pLib.Text(
+                output.push(new Text(
                   item.toString(),
                   element
                 ));
@@ -94,7 +94,7 @@ class App extends React.Component {
         ` + this.state.code + `
 
         if (output) return output;
-      `).call(null, this.state.files, PALIMPSEST, this.output);
+      `).call(null, this.state.files, Text, this.output);
       
       this.setState(prev => ({
         ...prev,
