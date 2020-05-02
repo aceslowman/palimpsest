@@ -7,7 +7,7 @@ import 'ace-builds/webpack-resolver';
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-github";
 
-import './components/remix';
+import * as PALIMPSEST from './components/remix';
 
 import defaultPatch from './components/default' 
 import placeholder from './components/placeholder'
@@ -19,14 +19,18 @@ let style = {
   },
   code: {
     display: 'block',
-  }
+  },
+  modal: {
+    opacity: '0%',
+  },
 }
 
 class App extends React.Component {
   constructor() {
     super();
 
-    localStorage.clear();
+    this.output = [];
+    // localStorage.clear();
 
     this.state = JSON.parse(localStorage.getItem('palimpsest-state')) ?
       JSON.parse(localStorage.getItem('palimpsest-state')) :
@@ -35,24 +39,53 @@ class App extends React.Component {
         files: new Array(10).fill(""),
         output: "",
         activePanel: null,
-        wrap: false
-      };      
+        wrap: true
+      };  
+      
   }
 
-  componentDidMount() {  
+  componentDidMount() { 
     this.executeCode();
     this.selectView();
   }
 
-  executeCode() {
+  executeCode() {    
     try {         
-      let res = new Function('txt', `  
-        var output = [];
-        
-        String.prototype.out = function(element = 'p'){
-          if(element)
-            output.push({element: element, text: this.toString()});
+      let res = new Function('txt','pLib','output',`        
+        output = [];
+
+        pLib.Text.prototype.out = function () {
+          output.push(this);
+          return this;
         }
+        
+        String.prototype.out = function (element = 'p') {
+          output.push(
+            new pLib.Text(
+              this.toString(),
+              (element && element !== '') ? element : 'p'
+            )
+          );
+        }
+
+        Array.prototype.out = function(element = 'p'){
+          for(let i = 0; i < this.length; i++) {
+            let item = this[i];
+            
+            if(item){
+              if (item.constructor.name === 'Text' && item !== null) {                
+                output.push(item);
+              } else {
+                output.push(new pLib.Text(
+                  item.toString(),
+                  element
+                ));
+              }
+            } 
+          }  
+
+          return output;
+        } 
 
         function random(arr = txt) {
           return arr[Math.floor(Math.random()*arr.length)]
@@ -61,20 +94,44 @@ class App extends React.Component {
         ` + this.state.code + `
 
         if (output) return output;
-      `).call(null, this.state.files);
+      `).call(null, this.state.files, PALIMPSEST, this.output);
       
       this.setState(prev => ({
         ...prev,
         output: res.map((e, i) => {
-          return React.createElement(
-            e.element, {
-              key: i
-            },
-            e.text
-          );
+          if(e)
+            return React.createElement(
+              e.element, {
+                key: i,
+                style: e.style
+              },
+              e.text
+            );
         })
       }));
-    } catch (err) {console.log(err)}
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  restoreDefault = () => {
+    // localStorage.clear();
+    
+    this.setState({
+      code: defaultPatch,
+      files: new Array(10).fill(""),
+      output: "",
+      activePanel: null,
+      wrap: true
+    });
+
+    style.modal = {opacity: '100%'}
+    this.setState({modal: "Default Restored!"})
+
+    setTimeout(()=>{
+      style.modal = {opacity: '0%'}
+      this.setState({modal: "Default Restored!"})
+    }, 3000);
   }
  
   handleChange = e => {    
@@ -180,7 +237,17 @@ class App extends React.Component {
   }
 
   handleSave = () => {
-    localStorage.setItem('palimpsest-state', JSON.stringify(this.state));
+    let stateClone = Object.assign({}, this.state);
+    delete stateClone.output;
+    localStorage.setItem('palimpsest-state', JSON.stringify(stateClone));
+
+    style.modal = {opacity: '100%'}
+    this.setState({modal: "Saved!"})
+
+    setTimeout(()=>{
+      style.modal = {opacity: '0%'}
+      this.setState({modal: "Saved!"})
+    }, 3000);
   }
 
   render() {
@@ -218,6 +285,14 @@ class App extends React.Component {
                     mac: 'Command-Enter'
                   },
                   exec: () => this.executeCode
+                },
+                {
+                  name: 'restoredefault',
+                  bindKey: {
+                    win: 'Alt-R',
+                    mac: 'Alt-R'
+                  },
+                  exec: () => this.restoreDefault()
                 }]
               }
               />
@@ -247,11 +322,11 @@ class App extends React.Component {
               <button 
                 onClick={this.handleClear}
                 title="clear all"                
-              >{'c'}</button>
+              >{'clear'}</button>
               <button 
                 onClick={this.handleSave}
                 title="save all"                
-              >{'s'}</button>
+              >{'save'}</button>
               {/* <button 
                 onClick={this.handleRandom}                
               >{'r'}</button> */}
@@ -259,7 +334,7 @@ class App extends React.Component {
                 onClick={this.handleWrap}
                 className={this.state.wrap ? 'invert': ''}  
                 title="toggle break"
-              >{'w'}</button>
+              >{'wrap'}</button>
               <button 
                 onClick={()=>this.handleExpand(0)}
                 title="split"
@@ -284,7 +359,9 @@ class App extends React.Component {
             }
             { this.state.activePanel === null && (<div>{this.state.output}</div>) }
           </div>
-          
+        </div>
+        <div id="MODAL" style={style.modal}>
+          {this.state.modal}
         </div>
       </div>
     );  

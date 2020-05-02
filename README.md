@@ -73,7 +73,7 @@ the text can be retrieved using this number
     * [decimate (amount, substitute = '-')](#decimate)
     * [filterRepeat (invert = false)](#filterRepeat)
     * [superimpose (txt2, delineate = ' ')](#superimpose)
-    * [interleave (txt2, amount = 1.0, words = false)](#interleave)
+    * [weave (txt2, amount = 1.0, words = false)](#weave)
     * [reverse (words = true)](#reverse)
     * [scramble (words = true)](#scramble)
     * [alphabetize(words = true)](#alphabetize)
@@ -122,14 +122,14 @@ superimpose will replace all non-whitespace characters of the first document wit
 ```
 
 -----------------------------------------
-### interleave
-##### *interleave (txt2, amount = 1.0, words = false)*
+### weave
+##### *weave (txt2, amount = 1.0, words = false)*
 
-interleave will output a string that alternates the characters(or words) between two texts. If a second argument is provided, it will alternate between the texts at the given percentage.
+weave will output a string that alternates the characters(or words) between two texts. If a second argument is provided, it will alternate between the texts at the given percentage.
 
 ```
 "you can perform text weaving"
-    .interleave("to get interesting combinations of material", 1.0, true)
+    .weave("to get interesting combinations of material", 1.0, true)
     .out()
 ```
 
@@ -213,7 +213,7 @@ random(
 /* for example
 random(txt)
     .reverse(true)
-    .interleave(random(txt), , true)
+    .weave(random(txt), , true)
     .out()
 */
 ```

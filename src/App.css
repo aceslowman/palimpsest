@@ -129,6 +129,22 @@ button, textarea {
   overflow:hidden;
 }
 
+#MODAL {
+  /* border: 1px dotted white; */
+  padding: 5px;
+  position:absolute;
+  bottom: 0px;
+  left: 0px;
+  background-color:black;
+  color:white;
+  z-index: 100;
+  opacity: 100%; 
+  transition: opacity 0.5s ease-out;
+  pointer-events: none;
+}
+
+
+
 @media only screen and (max-width: 800px){
 
   #MAIN {
@@ -166,3 +182,4 @@ button, textarea {
 
   /* #CODE */
 }
+

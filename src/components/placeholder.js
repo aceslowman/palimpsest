@@ -1,4 +1,6 @@
-const placeholder = `METHODS
+const placeholder = `TO RESTORE DEFAULTS, PRESS (Alt-R)
+
+METHODS
 
 ====================
 
@@ -8,7 +10,7 @@ filterRepeat(invert = false)
 
 superimpose(txt2, delineate = ' ')
 
-interleave(txt2, amount = 1.0, words = false)
+weave(txt2, amount = 1.0, words = false)
 
 reverse(words = true)
 

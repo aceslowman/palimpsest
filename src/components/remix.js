@@ -1,8 +1,8 @@
 /*
     decimate(amount, substitute = '-')
-    filterRepeat(invert = false)
+    unique(invert = false)
     superimpose(txt2, delineate = ' ')
-    interleave(txt2, amount = 1.0, words = false)
+    weave(txt2, rhythm = 1.0, words = false)
     reverse(words = true)
     scramble(words = true)
     alphabetize(words = true)
@@ -31,11 +31,6 @@ function decimate(str, amount, sub = '-') {
     }).join('');
 }
 
-String.prototype.decimate = function (amount, sub) {
-    return decimate(this.toString(), amount, sub)
-}
-
-
 /*
     filterRepeat(invert = false)
     -----------------------------------------
@@ -60,10 +55,27 @@ function filterRepeat(str, invert = false) {
     }).join(' ');
 }
 
-String.prototype.filterRepeat = function (invert = false) {
-    return filterRepeat(this.toString(), invert);
-}
+/*
+    unique()
+    -----------------------------------------
+    display only the unique words in the 
+    text. 
+*/
+function unique(str) {
+    let uniques = [];
 
+    str.split(' ').forEach(word => {
+        word = word.replace(/(^[,\s]+)|([,\s]+$)/g, '').trim();
+        let match = uniques.includes(word);
+        if(match){
+            uniques.splice(uniques.indexOf(word), 1)
+        }else{
+            uniques.push(word);
+        }
+    });
+
+    return uniques.join(' ');
+}
 
 /*
     superimpose(txt2, delineate = ' ')
@@ -84,33 +96,23 @@ function superimpose(txt1, txt2, delineate = ' ') {
     }).join('');
 }
 
-String.prototype.superimpose = function (txt2) {
-    return superimpose(this.toString(), txt2);
-}
-
-
 /*
-    interleave(txt2, amount = 1.0, words = true)
+    weave(txt2, type = ('c'|'w'), rhythm = 1.0)
     -----------------------------------------
-    interleave will output a string that 
+    weave will output a string that 
     alternates the characters(or words) 
     between two texts. If a second argument 
     is provided, it will alternate between 
     the texts at the given percentage.
 */
-function interleave(txt1, txt2, amount = 1.0, words = true) {
-    let arr1 = txt1.split(words ? ' ' : '');
-    let arr2 = txt2.split(words ? ' ' : '');
+function weave(txt1, txt2, type = 'w', rhythm = 1.0) {
+    let arr1 = txt1.split(type === 'w' ? ' ' : '');
+    let arr2 = txt2.split(type === 'w' ? ' ' : '');
 
-    return arr1.map((elem, i) => {
-        return (i % 2 === 0) && (Math.random() < amount) ? arr1[i] : arr2[i];     
-    }).join(words ? ' ' : '')
+    return arr1.map((e, i) => {
+        return (i % 2 === 0) && (Math.random() < rhythm) ? e : arr2[i];     
+    }).join(type === 'w' ? ' ' : '')
 }
-
-String.prototype.interleave = function (txt2, amount = 1.0, words = true) {
-    return interleave(this.toString(), txt2, amount, words);
-}
-
 
 /*
     reverse(words = true)
@@ -126,11 +128,6 @@ function reverse(txt, words = true) {
 
     return arr.reverse().join(words ? ' ' : '')
 }
-
-String.prototype.reverse = function (words = true) {
-    return reverse(this.toString(), words);
-}
-
 
 /*
     scramble(words = true)
@@ -157,11 +154,6 @@ function scramble(txt, words = true) {
     return array.join(words ? ' ' : '');
 }
 
-String.prototype.scramble = function (words = true) {
-    return scramble(this.toString(), words);
-}
-
-
 /*
     alphabetize(words = true)
     -----------------------------------------
@@ -174,11 +166,6 @@ function alphabetize(txt, words = true) {
 
     return array.sort().join(words ? ' ' : '');
 }
-
-String.prototype.alphabetize = function (words = true) {
-    return alphabetize(this.toString(), words);
-}
-
 
 /*
     sortLength()
@@ -196,16 +183,18 @@ function sortLength(txt) {
     return array.sort((a,b)=>a.length-b.length).join(' ');
 }
 
-String.prototype.sortLength = function () {
-    return sortLength(this.toString());
-}
-
 /*
     isolate(match = '', words = true, invert = false)
     -----------------------------------------
     isolate will remove all words or
     characters that fail to match the 
     provided string
+
+    by default it will preserve all spacing,
+    otherwise it would just return the given
+    phrase and be useless
+
+    returns a string
 */
 function isolate(txt, match = '', words = true, invert = false) {
     let array = txt.split(words ? ' ' : '');
@@ -217,10 +206,6 @@ function isolate(txt, match = '', words = true, invert = false) {
             return e;
         }
     }).join(words ? ' ' : '');
-}
-
-String.prototype.isolate = function (match = '', words = true, invert = false) {
-    return isolate(this.toString(),match,words,invert);
 }
 
 /*
@@ -238,17 +223,13 @@ function stanza(txt, nlines = 2, split = '.') {
     return array.join(split+b);
 }
 
-String.prototype.stanza = function (nlines = 2, split = '.') {
-    return stanza(this.toString(),nlines,split);
-}
-
 /*
-    toAscii(offset = 0)
+    ascii(offset = 0)
     -----------------------------------------
     map the current letter to a symbol in 
     unicode, an offset can be provided 
 */
-function toAscii(txt, offset = 65) {
+function ascii(txt, offset = 65) {
     var alphabet = 'abcdefghijklmnopqrstuvwxyz';
 
     return txt.split('').map((e,i)=>{
@@ -256,6 +237,279 @@ function toAscii(txt, offset = 65) {
     }).join('');
 }
 
-String.prototype.toAscii = function (offset = 65) {
-    return toAscii(this.toString(), offset);
+/*
+    questions()
+    -----------------------------------------
+    isolate questions.
+
+    should return an array?
+*/
+function questions(txt) {
+    return txt.split('?').map((e) => {
+        return e.split('.').slice(-1).join("").trim().concat('?')
+    });
+}
+
+/*
+    answers()
+    -----------------------------------------
+    isolate answers.
+
+    should return an array?
+*/
+function answers(txt) {
+    return txt.split('?').map((e) => {
+        return e.split('.').slice(1,-1).join("").trim().concat('.')
+    });
+}
+
+/*
+    condense()
+    -----------------------------------------
+    remove all extraneous white space and
+    linebreaks
+*/
+function condense(txt) {
+    return txt.replace(/[\r\n]+/gm,"").trim()
+}
+
+/*
+    stats()
+    -----------------------------------------
+    get statistics about the given string,
+    including the number of words, 
+    individual characters, number of unique
+    words, etc. should primarily be numerical
+    data
+
+    returns a string 
+*/
+function stats(txt) {
+    let cCount = txt.length;
+    let wCount = txt.split(' ').length;
+    let sCount = txt.split(/[.?!]/).length;
+    let uwCount = unique(txt).split(' ').length;
+    
+    return (
+        `
+        characters: ${cCount} 
+        words: ${wCount}
+        sentences: ${sCount}
+        unique words: ${uwCount}
+        `
+    );
+}
+
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+
+function Text(text = '', element = 'p', style = {}) {
+    this.element = element;
+    this.text = text;
+    this.style = style;
+}
+
+/* 
+    each method is added to String so that they can be 
+    performed on any string. after this, all methods will
+    deal directly with the Text object instead.
+*/
+
+String.prototype.decimate = function (amount, sub) {
+    return (new Text(decimate(this.toString(), amount, sub)))
+}
+
+String.prototype.filterRepeat = function (invert = false) {
+    return filterRepeat(this.toString(), invert);
+}
+
+String.prototype.unique = function () {
+    return (new Text(unique(this.toString())));
+}
+
+String.prototype.superimpose = function (txt2) {
+    return (new Text(superimpose(this.toString(), txt2)));
+}
+
+String.prototype.weave = function (txt2, type = 'w', rhythm = 1.0) {
+    return (new Text(weave(this.toString(), txt2, type, rhythm)));
+}
+
+String.prototype.reverse = function (words = true) {
+    return (new Text(reverse(this.toString(), words)));
+}
+
+String.prototype.scramble = function (words = true) {
+    return (new Text(scramble(this.toString(), words)));
+}
+
+String.prototype.alphabetize = function (words = true) {
+    return (new Text(alphabetize(this.toString(), words)));
+}
+
+String.prototype.sortLength = function () {
+    return sortLength(this.toString());
+}
+
+String.prototype.isolate = function (match = '', words = true, invert = false) {
+    return isolate(this.toString(), match, words, invert);
+}
+
+String.prototype.stanza = function (nlines = 2, split = '.') {
+    return (new Text(stanza(this.toString(), nlines, split)));
+}
+
+String.prototype.ascii = function (offset = 65) {
+    return (new Text(ascii(this.toString(), offset)));
+}
+
+String.prototype.questions = function () {
+    return (new Text(questions(this.toString())));
+}
+
+String.prototype.answers = function () {
+    return (new Text(answers(this.toString())));
+}
+
+String.prototype.condense = function () {
+    return (new Text(condense(this.toString())));
+}
+
+String.prototype.style = function (element = 'p') {
+    return (new Text(            
+        this.toString(),
+        (element !== '' && element) ? element : 'p',
+    ))
+}
+
+String.prototype.align = function (type = 'left') {
+    return (new Text(
+        this.toString(),
+        'p',
+        {align: type}
+    ))
+}
+
+String.prototype.stats = function () {    
+    return (new Text(
+        stats(this.toString())
+    ))
+}
+
+//----------------------------------------------------------------
+
+Text.prototype.decimate = function (amount, sub) {
+    this.text = decimate(this.text.toString(), amount, sub)
+    return this;
+}
+
+Text.prototype.filterRepeat = function (invert = false) {
+    this.text = filterRepeat(this.toString(), invert);
+    return this;
+}
+
+Text.prototype.unique = function (invert = false) {
+    this.text = unique(this.text.toString(), invert);
+    return this;
+}
+
+Text.prototype.superimpose = function (txt2) {
+    this.text = superimpose(this.text.toString(), txt2);
+    return this;
+}
+
+Text.prototype.weave = function (txt2, type = 'w', rhythm = 1.0) {
+    this.text = weave(this.text.toString(), txt2.text.toString(), type, rhythm);
+    return this;
+}
+
+Text.prototype.reverse = function (words = true) {
+    this.text = reverse(this.text.toString(), words);
+    return this;
+}
+
+Text.prototype.scramble = function (words = true) {
+    this.text = scramble(this.text.toString(), words);
+    return this;
+}
+
+Text.prototype.alphabetize = function (words = true) {
+    this.text = alphabetize(this.text.toString(), words);
+    return this;
+}
+
+Text.prototype.stanza = function (nlines = 2, split = '.') {
+    this.text = stanza(this.text.toString(), nlines, split);
+    return this;
+}
+
+Text.prototype.ascii = function (offset = 65) {
+    this.text = ascii(this.text.toString(), offset);
+    return this;
+}
+
+Text.prototype.questions = function () { // returns an array
+    return questions(this.text.toString()).map((e,i)=>{
+        return (new Text(e,this.element))
+    })    
+}
+
+Text.prototype.answers = function () { // returns an array
+    return answers(this.text.toString()).map((e,i)=>{
+        return (new Text(e,this.element))
+    })    
+}
+
+Text.prototype.condense = function () {
+    this.text = condense(this.text.toString());
+    return this;
+}
+
+Text.prototype.style = function (element = 'p') {
+    this.element = (element !== '' && element) ? element : 'p';
+    return this;
+}
+
+Text.prototype.align = function (type = 'left') {
+    this.style = { ...this.style, align: type }
+    return this;
+}
+
+//----------------------------------------------------------------
+Array.prototype.style = function (element = 'p') {
+    this.forEach((e) => {
+        e.element = (element !== '' && element) ? element : 'p';
+    })
+    
+    return this;
+}
+
+Array.prototype.align = function (type = 'left') {
+    this.forEach((e) => {
+        e.style = {...e.style, textAlign: type};
+    })
+
+    return this;
+}
+
+Array.prototype.ascii = function (offset = 1457) {
+    this.forEach((e) => {
+        e.text = ascii(e.text.toString(), offset);
+    })
+
+    return this;
+}
+
+Array.prototype.weave = function (arr2 = []) {
+    if(arr2 !== '' && arr2) {        
+        return this.map((e,i) => {
+            return (i % 2 === 0) ? this[i] : arr2[i];
+        });
+    }
+
+    return this;
+}
+
+module.exports = {
+    Text: Text
 }
