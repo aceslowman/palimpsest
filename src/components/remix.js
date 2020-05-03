@@ -25,10 +25,29 @@
     characters, but soon it will allow for 
     decimating words instead.
 */
-function decimate(str, amount, sub = '-') {
-    return str.split('').map(char => {
+function decimate(str, amount = '0.5', type = 'w', sub = '-') {
+    return str.split(type === 'w' ? ' ' : '').map(char => {
         return Math.random() < amount ? char : sub;
     }).join('');
+}
+
+String.prototype.decimate = function (amount, type = 'w', sub) {
+    return (new Text(decimate(this.toString(), amount, type, sub)))
+}
+Text.prototype.decimate = function (amount, type = 'w', sub) {
+    this.text = decimate(this.text.toString(), amount, type, sub)
+    return this;
+}
+
+Array.prototype.decimate = function(amount, type = 'c', sub){
+    this.forEach((e,i) => {
+        if(e.constructor.name === "Text"){
+            this[i].text = decimate(e.text.toString(), amount, type, sub)
+        }else{
+            this[i] = new Text(decimate(e.toString(), amount, type, sub))
+        }  
+    })
+    return this;
 }
 
 /*
@@ -55,6 +74,17 @@ function filterRepeat(str, invert = false) {
     }).join(' ');
 }
 
+String.prototype.filterRepeat = function (invert = false) {
+    return filterRepeat(this.toString(), invert);
+}
+
+Text.prototype.filterRepeat = function (invert = false) {
+    this.text = filterRepeat(this.toString(), invert);
+    return this;
+}
+
+// Array.prototype.filterRepeat = function(){}
+
 /*
     unique()
     -----------------------------------------
@@ -77,6 +107,17 @@ function unique(str) {
     return uniques.join(' ');
 }
 
+String.prototype.unique = function () {
+    return (new Text(unique(this.toString())));
+}
+
+Text.prototype.unique = function (invert = false) {
+    this.text = unique(this.text.toString(), invert);
+    return this;
+}
+
+// Array.prototype.unique = function(){}
+
 /*
     superimpose(txt2, delineate = ' ')
     -----------------------------------------
@@ -96,6 +137,17 @@ function superimpose(txt1, txt2, delineate = ' ') {
     }).join('');
 }
 
+String.prototype.superimpose = function (txt2) {
+    return (new Text(superimpose(this.toString(), txt2)));
+}
+
+Text.prototype.superimpose = function (txt2) {
+    this.text = superimpose(this.text.toString(), txt2);
+    return this;
+}
+
+// Array.prototype.superimpose = function(){}
+
 /*
     weave(txt2, type = ('c'|'w'), rhythm = 1.0)
     -----------------------------------------
@@ -114,8 +166,27 @@ function weave(txt1, txt2, type = 'w', rhythm = 1.0) {
     }).join(type === 'w' ? ' ' : '')
 }
 
+String.prototype.weave = function (txt2, type = 'w', rhythm = 1.0) {
+    return (new Text(weave(this.toString(), txt2, type, rhythm)));
+}
+
+Text.prototype.weave = function (txt2, type = 'w', rhythm = 1.0) {
+    this.text = weave(this.text.toString(), txt2.text.toString(), type, rhythm);
+    return this;
+}
+
+Array.prototype.weave = function (arr2 = []) {
+    if (arr2 !== '' && arr2) {
+        return this.map((e, i) => {
+            return (i % 2 === 0) ? this[i] : arr2[i];
+        });
+    }
+
+    return this;
+}
+
 /*
-    reverse(words = true)
+    reverse(type = 'w')
     -----------------------------------------
     reverse will reverse the order of the 
     words in a string.
@@ -123,11 +194,22 @@ function weave(txt1, txt2, type = 'w', rhythm = 1.0) {
     by passing false as an argument, it will
     reverse individual characters instead.
 */
-function reverse(txt, words = true) {
-    let arr = txt.split(words ? ' ' : '');    
+function reverse(txt, type = 'w') {
+    let arr = txt.split(type === 'w' ? ' ' : '');    
 
-    return arr.reverse().join(words ? ' ' : '')
+    return arr.reverse().join(type === 'w' ? ' ' : '');
 }
+
+String.prototype.reverse = function (words = true) {
+    return (new Text(reverse(this.toString(), words)));
+}
+
+Text.prototype.reverse = function (words = true) {
+    this.text = reverse(this.text.toString(), words);
+    return this;
+}
+
+// Array.prototype.reverse = function(){}
 
 /*
     scramble(words = true)
@@ -154,18 +236,40 @@ function scramble(txt, words = true) {
     return array.join(words ? ' ' : '');
 }
 
+String.prototype.scramble = function (words = true) {
+    return (new Text(scramble(this.toString(), words)));
+}
+
+Text.prototype.scramble = function (words = true) {
+    this.text = scramble(this.text.toString(), words);
+    return this;
+}
+
+// Array.prototype.scramble = function(){}
+
 /*
-    alphabetize(words = true)
+    alphabetize(type = 'w')
     -----------------------------------------
     alphabetize will reorder a string either 
     by word or by character
 */
 
-function alphabetize(txt, words = true) {
-    let array = txt.split(words ? ' ' : '');
+function alphabetize(txt, type = 'w') {
+    let array = txt.split(type == 'w' ? ' ' : '');
 
-    return array.sort().join(words ? ' ' : '');
+    return array.sort().join(type == 'w' ? ' ' : '');
 }
+
+String.prototype.alphabetize = function (words = true) {
+    return (new Text(alphabetize(this.toString(), words)));
+}
+
+Text.prototype.alphabetize = function (words = true) {
+    this.text = alphabetize(this.text.toString(), words);
+    return this;
+}
+
+// Array.prototype.alphabetize = function(){}
 
 /*
     sortLength()
@@ -182,6 +286,14 @@ function sortLength(txt) {
 
     return array.sort((a,b)=>a.length-b.length).join(' ');
 }
+
+String.prototype.sortLength = function () {
+    return sortLength(this.toString());
+}
+
+// Text.prototype.sortLength = function(){}
+
+// Array.prototype.sortLength = function(){}
 
 /*
     isolate(match = '', words = true, invert = false)
@@ -208,6 +320,14 @@ function isolate(txt, match = '', words = true, invert = false) {
     }).join(words ? ' ' : '');
 }
 
+String.prototype.isolate = function(match = '', words = true, invert = false) {
+    return isolate(this.toString(), match, words, invert);
+}
+
+// Text.prototype.isolate = function(){}
+
+// Array.prototype.isolate = function(){}
+
 /*
     stanza(nlines = 2, split = '.')
     -----------------------------------------
@@ -223,6 +343,17 @@ function stanza(txt, nlines = 2, split = '.') {
     return array.join(split+b);
 }
 
+String.prototype.stanza = function (nlines = 2, split = '.') {
+    return (new Text(stanza(this.toString(), nlines, split)));
+}
+
+Text.prototype.stanza = function (nlines = 2, split = '.') {
+    this.text = stanza(this.text.toString(), nlines, split);
+    return this;
+}
+
+// Array.prototype.stanza = function(){}
+
 /*
     ascii(offset = 0)
     -----------------------------------------
@@ -235,6 +366,23 @@ function ascii(txt, offset = 65) {
     return txt.split('').map((e,i)=>{
         return (e !== ' ') ? String.fromCharCode(alphabet.indexOf(e) + offset) : ' '
     }).join('');
+}
+
+String.prototype.ascii = function (offset = 65) {
+    return (new Text(ascii(this.toString(), offset)));
+}
+
+Text.prototype.ascii = function (offset = 65) {
+    this.text = ascii(this.text.toString(), offset);
+    return this;
+}
+
+Array.prototype.ascii = (offset = 1457) => {
+    this.forEach((e) => {
+        e.text = ascii(e.text.toString(), offset);
+    })
+
+    return this;
 }
 
 /*
@@ -250,6 +398,18 @@ function questions(txt) {
     });
 }
 
+String.prototype.questions = function () {
+    return (new Text(questions(this.toString())));
+}
+
+Text.prototype.questions = function () { // returns an array
+    return questions(this.text.toString()).map((e, i) => {
+        return (new Text(e, this.element))
+    })
+}
+
+// Array.prototype.questions = function(){}
+
 /*
     answers()
     -----------------------------------------
@@ -263,6 +423,18 @@ function answers(txt) {
     });
 }
 
+String.prototype.answers = function () {
+    return (new Text(answers(this.toString())));
+}
+
+Text.prototype.answers = function () { // returns an array
+    return answers(this.text.toString()).map((e, i) => {
+        return (new Text(e, this.element))
+    })
+}
+
+// Array.prototype.answers = function(){}
+
 /*
     condense()
     -----------------------------------------
@@ -272,6 +444,17 @@ function answers(txt) {
 function condense(txt) {
     return txt.replace(/[\r\n]+/gm,"").trim()
 }
+
+String.prototype.condense = function () {
+    return (new Text(condense(this.toString())));
+}
+
+Text.prototype.condense = function () {
+    this.text = condense(this.text.toString());
+    return this;
+}
+
+// Array.prototype.condense = function(){}
 
 /*
     stats()
@@ -300,6 +483,16 @@ function stats(txt) {
     );
 }
 
+String.prototype.stats = () => {
+    return (new Text(
+        stats(this.toString())
+    ))
+}
+
+// Text.prototype.stats = function(){}
+
+// Array.prototype.stats = function(){}
+
 //----------------------------------------------------------------
 //----------------------------------------------------------------
 
@@ -315,154 +508,11 @@ function Text(text = '', element = 'p', style = {}) {
     deal directly with the Text object instead.
 */
 
-String.prototype.decimate = function (amount, sub) {
-    return (new Text(decimate(this.toString(), amount, sub)))
-}
-
-String.prototype.filterRepeat = function (invert = false) {
-    return filterRepeat(this.toString(), invert);
-}
-
-String.prototype.unique = function () {
-    return (new Text(unique(this.toString())));
-}
-
-String.prototype.superimpose = function (txt2) {
-    return (new Text(superimpose(this.toString(), txt2)));
-}
-
-String.prototype.weave = function (txt2, type = 'w', rhythm = 1.0) {
-    return (new Text(weave(this.toString(), txt2, type, rhythm)));
-}
-
-String.prototype.reverse = function (words = true) {
-    return (new Text(reverse(this.toString(), words)));
-}
-
-String.prototype.scramble = function (words = true) {
-    return (new Text(scramble(this.toString(), words)));
-}
-
-String.prototype.alphabetize = function (words = true) {
-    return (new Text(alphabetize(this.toString(), words)));
-}
-
-String.prototype.sortLength = function () {
-    return sortLength(this.toString());
-}
-
-String.prototype.isolate = function (match = '', words = true, invert = false) {
-    return isolate(this.toString(), match, words, invert);
-}
-
-String.prototype.stanza = function (nlines = 2, split = '.') {
-    return (new Text(stanza(this.toString(), nlines, split)));
-}
-
-String.prototype.ascii = function (offset = 65) {
-    return (new Text(ascii(this.toString(), offset)));
-}
-
-String.prototype.questions = function () {
-    return (new Text(questions(this.toString())));
-}
-
-String.prototype.answers = function () {
-    return (new Text(answers(this.toString())));
-}
-
-String.prototype.condense = function () {
-    return (new Text(condense(this.toString())));
-}
-
 String.prototype.style = function (element = 'p') {
-    return (new Text(            
+    return (new Text(
         this.toString(),
         (element !== '' && element) ? element : 'p',
     ))
-}
-
-String.prototype.align = function (type = 'left') {
-    return (new Text(
-        this.toString(),
-        'p',
-        {align: type}
-    ))
-}
-
-String.prototype.stats = function () {    
-    return (new Text(
-        stats(this.toString())
-    ))
-}
-
-//----------------------------------------------------------------
-
-Text.prototype.decimate = function (amount, sub) {
-    this.text = decimate(this.text.toString(), amount, sub)
-    return this;
-}
-
-Text.prototype.filterRepeat = function (invert = false) {
-    this.text = filterRepeat(this.toString(), invert);
-    return this;
-}
-
-Text.prototype.unique = function (invert = false) {
-    this.text = unique(this.text.toString(), invert);
-    return this;
-}
-
-Text.prototype.superimpose = function (txt2) {
-    this.text = superimpose(this.text.toString(), txt2);
-    return this;
-}
-
-Text.prototype.weave = function (txt2, type = 'w', rhythm = 1.0) {
-    this.text = weave(this.text.toString(), txt2.text.toString(), type, rhythm);
-    return this;
-}
-
-Text.prototype.reverse = function (words = true) {
-    this.text = reverse(this.text.toString(), words);
-    return this;
-}
-
-Text.prototype.scramble = function (words = true) {
-    this.text = scramble(this.text.toString(), words);
-    return this;
-}
-
-Text.prototype.alphabetize = function (words = true) {
-    this.text = alphabetize(this.text.toString(), words);
-    return this;
-}
-
-Text.prototype.stanza = function (nlines = 2, split = '.') {
-    this.text = stanza(this.text.toString(), nlines, split);
-    return this;
-}
-
-Text.prototype.ascii = function (offset = 65) {
-    this.text = ascii(this.text.toString(), offset);
-    return this;
-}
-
-Text.prototype.questions = function () { // returns an array
-    return questions(this.text.toString()).map((e,i)=>{
-        return (new Text(e,this.element))
-    })    
-}
-
-Text.prototype.answers = function () { // returns an array
-    return answers(this.text.toString()).map((e,i)=>{
-        return (new Text(e,this.element))
-    })    
-}
-
-Text.prototype.condense = function () {
-    this.text = condense(this.text.toString());
-    return this;
 }
 
 Text.prototype.style = function (element = 'p') {
@@ -470,44 +520,151 @@ Text.prototype.style = function (element = 'p') {
     return this;
 }
 
-Text.prototype.align = function (type = 'left') {
-    this.style = { ...this.style, align: type }
-    return this;
-}
-
-//----------------------------------------------------------------
 Array.prototype.style = function (element = 'p') {
     this.forEach((e) => {
         e.element = (element !== '' && element) ? element : 'p';
     })
-    
-    return this;
-}
-
-Array.prototype.align = function (type = 'left') {
-    this.forEach((e) => {
-        e.style = {...e.style, textAlign: type};
-    })
 
     return this;
 }
 
-Array.prototype.ascii = function (offset = 1457) {
-    this.forEach((e) => {
-        e.text = ascii(e.text.toString(), offset);
-    })
 
-    return this;
+String.prototype.align = function (type = 'left') {
+    return (new Text(
+        this.toString(),
+        'p', {
+            align: type
+        }
+    ))
 }
 
-Array.prototype.weave = function (arr2 = []) {
-    if(arr2 !== '' && arr2) {        
-        return this.map((e,i) => {
-            return (i % 2 === 0) ? this[i] : arr2[i];
-        });
+Text.prototype.align = function (type = 'left') {
+    this.style = {
+        ...this.style,
+        align: type
     }
+    return this;
+}
+
+Array.prototype.align = (type = 'left') => {
+    this.forEach((e) => {
+        e.style = {
+            ...e.style,
+            textAlign: type
+        };
+    })
 
     return this;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+decimate
+filterRepeat
+unique
+superimpose
+weave
+reverse
+scramble
+alphabetize
+sortLength
+isolate
+stanza
+ascii
+questions
+answers
+condense
+style
+align
+stats
+*/
 
 export default Text
