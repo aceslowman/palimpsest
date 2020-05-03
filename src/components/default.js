@@ -20,9 +20,9 @@ export default `
 
 */
 
-"palimpsest is a text manipulation toolkit".scramble(false).toAscii(1457).out('h1')
+"palimpsest is a text manipulation toolkit".scramble(false).ascii(1457).out('h1')
 
-"it allows you to send text through a number of processes, which are defined at the bottom of this page".toAscii(1457).out();
+"it allows you to send text through a number of processes, which are defined at the bottom of this page".ascii(1457).out()
 
 "METHODS".style('h2').out()
 
@@ -46,7 +46,7 @@ export default `
 
 "stanza(nlines = 2, split = '.')".stanza().out()
 
-"random(arr = txt)".weave(random(["other","strings"])),out()
+"random(arr = txt)".out()
 
 "out()".out()
 

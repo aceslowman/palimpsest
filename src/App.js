@@ -30,7 +30,7 @@ class App extends React.Component {
     super();
 
     this.output = [];
-    // localStorage.clear();
+    localStorage.clear();
 
     this.state = JSON.parse(localStorage.getItem('palimpsest-state')) ?
       JSON.parse(localStorage.getItem('palimpsest-state')) :
